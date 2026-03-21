@@ -2,8 +2,11 @@ import { useCallback, useMemo, useState } from "react";
 import { ChatKit, useChatKit } from "@openai/chatkit-react";
 import { useAuth } from "../auth";
 
-/** Matches chat shell in `index.css` (dark gray, not pure black). */
-const CHAT_SURFACE = "#17171a";
+/**
+ * ChatKit `surface` drives the composer/input row. Mid-grey + white text avoids
+ * the bar washing out to near-white (high `tint` / `shade` was doing that).
+ */
+const CHAT_COMPOSER_SURFACE_BG = "#45454e";
 const CHAT_COMPOSER_PLACEHOLDER =
   "Chat, plan your next trip — ideas, dates, destinations…";
 
@@ -59,19 +62,20 @@ export default function Chat() {
       colorScheme: "dark",
       radius: "round",
       density: "normal",
+      typography: { baseSize: 16 },
       color: {
         surface: {
-          background: CHAT_SURFACE,
-          foreground: "#f4f4f5",
+          background: CHAT_COMPOSER_SURFACE_BG,
+          foreground: "#ffffff",
         },
         accent: {
-          primary: "#c4c4cc",
-          level: 2,
+          primary: "#a1a1aa",
+          level: 1,
         },
         grayscale: {
-          hue: 235,
-          tint: 3,
-          shade: 1,
+          hue: 220,
+          tint: 0,
+          shade: -3,
         },
       },
     },

@@ -51,7 +51,7 @@ body {
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.12);
   box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
-  background: #17171a;
+  background: #1e1e24;
 }
 
 /* Full-viewport chat (mobile): header + ChatKit in one column */
@@ -71,14 +71,14 @@ body {
   flex: 1;
   min-height: 0;
   width: 100%;
-  background: #17171a;
+  background: #1e1e24;
 }
 
 .tripin-header--in-chat {
   max-width: none;
   width: 100%;
   flex-shrink: 0;
-  background: #17171a;
+  background: #1e1e24;
   padding: max(0.5rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) 0.65rem
     max(1rem, env(safe-area-inset-left));
   /* No border: keeps one continuous black band with the shell */
