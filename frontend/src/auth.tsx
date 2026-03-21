@@ -7,6 +7,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { flushSync } from "react-dom";
 
 const TOKEN_KEY = "tripin_token";
 
@@ -103,10 +104,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
     const data = (await res.json()) as { access_token: string };
     localStorage.setItem(TOKEN_KEY, data.access_token);
-    setToken(data.access_token);
-    setReady(false);
-    await loadMe(data.access_token);
-  }, [loadMe]);
+    // Commit token + loading state before navigation so / never sees a stale null token.
+    // Profile load runs only in useEffect to avoid double fetch / ready flicker.
+    flushSync(() => {
+      setToken(data.access_token);
+      setReady(false);
+    });
+  }, []);
 
   const register = useCallback(async (payload: RegisterPayload) => {
     const res = await fetch("/api/auth/signup", {
