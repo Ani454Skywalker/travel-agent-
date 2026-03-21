@@ -12,9 +12,11 @@ body,
 }
 
 body {
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-  background: #0f1419;
-  color: #e7e9ea;
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #000000;
+  color: #ffffff;
 }
 
 .app-shell {
@@ -47,9 +49,9 @@ body {
   height: min(72vh, 640px);
   border-radius: 16px;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
-  background: #15202b;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
+  background: #000000;
 }
 
 /* Custom element defaults to inline; needs block + size or the UI looks “empty”. */
@@ -349,24 +351,24 @@ openai-chatkit {
   font-size: 1.5rem;
   font-weight: 800;
   letter-spacing: 0.28em;
-  color: #f5f5f5;
+  color: #ffffff;
 }
 
 .tripin-tagline {
   margin: 0.35rem 0 0;
   font-size: 0.95rem;
   font-weight: 500;
-  color: #9a9a9a;
+  color: #ffffff;
   line-height: 1.35;
 }
 
 .btn-logout-minimal {
   flex-shrink: 0;
   padding: 0.35rem 0.65rem;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.35);
   border-radius: 8px;
   background: transparent;
-  color: #a8a8a8;
+  color: #ffffff;
   font-size: 0.75rem;
   cursor: pointer;
 }
