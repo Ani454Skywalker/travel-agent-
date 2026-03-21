@@ -360,16 +360,6 @@ openai-chatkit {
   line-height: 1.35;
 }
 
-.tripin-greeting {
-  margin: 0;
-  max-width: 28rem;
-  text-align: center;
-  font-size: 1.05rem;
-  font-weight: 500;
-  color: #e0e0e0;
-  line-height: 1.45;
-}
-
 .btn-logout-minimal {
   flex-shrink: 0;
   padding: 0.35rem 0.65rem;

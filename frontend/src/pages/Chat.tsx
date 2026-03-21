@@ -11,13 +11,15 @@ function displayFirstName(raw: string | null): string | null {
 export default function Chat() {
   const { token, firstName, logout } = useAuth();
 
-  const greeting = useMemo(() => {
+  /** ChatKit start screen (replaces default “What can I help with today?”). */
+  const startGreeting = useMemo(() => {
     const name = displayFirstName(firstName);
     if (name) {
-      return `Hello ${name}, how can I help you today?`;
+      return `What can I help you with today, ${name}?`;
     }
-    return "Hello, how can I help you today?";
+    return "What can I help you with today?";
   }, [firstName]);
+
   const [kitError, setKitError] = useState<string | null>(null);
 
   const getClientSecret = useCallback(
@@ -49,6 +51,9 @@ export default function Chat() {
       getClientSecret,
     },
     theme: "dark",
+    startScreen: {
+      greeting: startGreeting,
+    },
     composer: {
       attachments: { enabled: false },
     },
@@ -72,8 +77,6 @@ export default function Chat() {
           </button>
         </div>
       </header>
-
-      <p className="tripin-greeting">{greeting}</p>
 
       {kitError ? <div className="kit-error">{kitError}</div> : null}
       <div className="chat-frame">
