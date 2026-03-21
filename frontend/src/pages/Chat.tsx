@@ -2,7 +2,7 @@ import { useCallback, useMemo, useState } from "react";
 import { ChatKit, useChatKit } from "@openai/chatkit-react";
 import { useAuth } from "../auth";
 
-function formatGreetingName(raw: string | null): string | null {
+function displayFirstName(raw: string | null): string | null {
   if (!raw?.trim()) return null;
   const t = raw.trim();
   return t.charAt(0).toUpperCase() + t.slice(1);
@@ -10,15 +10,15 @@ function formatGreetingName(raw: string | null): string | null {
 
 export default function Chat() {
   const { token, firstName, logout } = useAuth();
-  const [kitError, setKitError] = useState<string | null>(null);
 
   const greeting = useMemo(() => {
-    const name = formatGreetingName(firstName);
+    const name = displayFirstName(firstName);
     if (name) {
       return `Hello ${name}, how can I help you today?`;
     }
     return "Hello, how can I help you today?";
   }, [firstName]);
+  const [kitError, setKitError] = useState<string | null>(null);
 
   const getClientSecret = useCallback(
     (_existing: string | null) => {

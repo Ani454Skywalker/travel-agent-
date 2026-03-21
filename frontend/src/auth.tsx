@@ -4,6 +4,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
@@ -52,7 +53,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [lastName, setLastName] = useState<string | null>(null);
   const [ready, setReady] = useState(!localStorage.getItem(TOKEN_KEY));
 
+  /** Profile in state already matches this access token (avoids duplicate /me). */
+  const hydratedTokenRef = useRef<string | null>(null);
+  /** Skip one token effect run right after programmatic login (effect would duplicate loadMe). */
+  const skipNextTokenEffectRef = useRef(false);
+
   const logout = useCallback(() => {
+    hydratedTokenRef.current = null;
     localStorage.removeItem(TOKEN_KEY);
     setToken(null);
     setEmail(null);
@@ -66,6 +73,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       headers: { Authorization: `Bearer ${t}` },
     });
     if (!res.ok) {
+      hydratedTokenRef.current = null;
       logout();
       return;
     }
@@ -77,15 +85,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setEmail(data.email);
     setFirstName(data.first_name?.trim() || null);
     setLastName(data.last_name?.trim() || null);
+    hydratedTokenRef.current = t;
     setReady(true);
   }, [logout]);
 
   useEffect(() => {
     if (!token) {
+      hydratedTokenRef.current = null;
       setEmail(null);
       setFirstName(null);
       setLastName(null);
       setReady(true);
+      return;
+    }
+    if (skipNextTokenEffectRef.current) {
+      skipNextTokenEffectRef.current = false;
+      return;
+    }
+    if (hydratedTokenRef.current === token) {
       return;
     }
     setReady(false);
@@ -104,13 +121,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
     const data = (await res.json()) as { access_token: string };
     localStorage.setItem(TOKEN_KEY, data.access_token);
-    // Commit token + loading state before navigation so / never sees a stale null token.
-    // Profile load runs only in useEffect to avoid double fetch / ready flicker.
+    skipNextTokenEffectRef.current = true;
     flushSync(() => {
       setToken(data.access_token);
       setReady(false);
     });
-  }, []);
+    await loadMe(data.access_token);
+  }, [loadMe]);
 
   const register = useCallback(async (payload: RegisterPayload) => {
     const res = await fetch("/api/auth/signup", {
