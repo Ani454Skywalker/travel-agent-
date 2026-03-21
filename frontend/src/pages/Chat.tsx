@@ -2,6 +2,11 @@ import { useCallback, useMemo, useState } from "react";
 import { ChatKit, useChatKit } from "@openai/chatkit-react";
 import { useAuth } from "../auth";
 
+/** Matches chat shell in `index.css` (dark gray, not pure black). */
+const CHAT_SURFACE = "#17171a";
+const CHAT_COMPOSER_PLACEHOLDER =
+  "Chat, plan your next trip — ideas, dates, destinations…";
+
 function displayFirstName(raw: string | null): string | null {
   if (!raw?.trim()) return null;
   const t = raw.trim();
@@ -53,19 +58,20 @@ export default function Chat() {
     theme: {
       colorScheme: "dark",
       radius: "round",
+      density: "normal",
       color: {
         surface: {
-          background: "#000000",
-          foreground: "#d1d5db",
+          background: CHAT_SURFACE,
+          foreground: "#f4f4f5",
         },
         accent: {
-          primary: "#9ca3af",
-          level: 1,
+          primary: "#c4c4cc",
+          level: 2,
         },
         grayscale: {
-          hue: 230,
-          tint: 5,
-          shade: -2,
+          hue: 235,
+          tint: 3,
+          shade: 1,
         },
       },
     },
@@ -74,7 +80,7 @@ export default function Chat() {
     },
     composer: {
       attachments: { enabled: false },
-      placeholder: "",
+      placeholder: CHAT_COMPOSER_PLACEHOLDER,
     },
     onError: ({ error }) => {
       const msg = error?.message ?? String(error);
