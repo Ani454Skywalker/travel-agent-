@@ -2,11 +2,15 @@ import { useCallback, useMemo, useState } from "react";
 import { ChatKit, useChatKit } from "@openai/chatkit-react";
 import { useAuth } from "../auth";
 
+/** Same stack as `body` / Google Fonts link in `index.html`. */
+const FONT_STACK =
+  "'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif";
+
 /**
- * ChatKit `surface` drives the composer/input row. Mid-grey + white text avoids
- * the bar washing out to near-white (high `tint` / `shade` was doing that).
+ * Darker “canvas” comes from `grayscale`; composer uses `surface` ~one step
+ * lighter so the typing row is visible but not white.
  */
-const CHAT_COMPOSER_SURFACE_BG = "#45454e";
+const CHAT_COMPOSER_SURFACE_BG = "#3f3f47";
 const CHAT_COMPOSER_PLACEHOLDER =
   "Chat, plan your next trip — ideas, dates, destinations…";
 
@@ -62,15 +66,18 @@ export default function Chat() {
       colorScheme: "dark",
       radius: "round",
       density: "normal",
-      typography: { baseSize: 16 },
+      typography: {
+        baseSize: 16,
+        fontFamily: FONT_STACK,
+      },
       color: {
         surface: {
           background: CHAT_COMPOSER_SURFACE_BG,
-          foreground: "#ffffff",
+          foreground: "#f4f4f5",
         },
         accent: {
-          primary: "#a1a1aa",
-          level: 1,
+          primary: "#5c5c66",
+          level: 0,
         },
         grayscale: {
           hue: 220,
