@@ -1,10 +1,12 @@
 import { FormEvent, useState } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../auth";
 
 export default function Login() {
   const { login, token, email, ready } = useAuth();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const justRegistered = searchParams.get("registered") === "1";
   if (token && !ready) {
     return (
       <div className="auth-page">
@@ -37,11 +39,33 @@ export default function Login() {
   return (
     <div className="auth-page">
       <div className="auth-card">
-        <p className="auth-brand">tRipin</p>
+        <p className="auth-brand">TRIPIN</p>
         <h1>Log in</h1>
         <p className="auth-sub">
           Your itinerary and travel agent — one account for your trips.
         </p>
+        {justRegistered ? (
+          <p className="auth-banner auth-banner--ok" role="status">
+            Account created. If email is configured, you’ll get a confirmation message.
+            Enter your email and password below to open the app.
+            <button
+              type="button"
+              className="auth-banner-dismiss"
+              onClick={() => {
+                setSearchParams(
+                  (prev) => {
+                    const next = new URLSearchParams(prev);
+                    next.delete("registered");
+                    return next;
+                  },
+                  { replace: true },
+                );
+              }}
+            >
+              Dismiss
+            </button>
+          </p>
+        ) : null}
         <form onSubmit={onSubmit}>
           <label>
             Email

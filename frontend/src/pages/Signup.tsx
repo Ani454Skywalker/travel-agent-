@@ -3,7 +3,7 @@ import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth";
 
 export default function Signup() {
-  const { signup, token, email, ready } = useAuth();
+  const { register, token, email, ready } = useAuth();
   const navigate = useNavigate();
   if (token && !ready) {
     return (
@@ -17,6 +17,9 @@ export default function Signup() {
   }
   const [emailInput, setEmailInput] = useState("");
   const [password, setPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [dateOfBirth, setDateOfBirth] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
 
@@ -27,10 +30,24 @@ export default function Signup() {
       setError("Password must be at least 8 characters.");
       return;
     }
+    if (!firstName.trim() || !lastName.trim()) {
+      setError("Please enter your first and last name.");
+      return;
+    }
+    if (!dateOfBirth) {
+      setError("Please enter your date of birth.");
+      return;
+    }
     setPending(true);
     try {
-      await signup(emailInput.trim(), password);
-      navigate("/", { replace: true });
+      await register({
+        email: emailInput.trim(),
+        password,
+        first_name: firstName.trim(),
+        last_name: lastName.trim(),
+        date_of_birth: dateOfBirth,
+      });
+      navigate("/login?registered=1", { replace: true });
     } catch (e) {
       setError(e instanceof Error ? e.message : "Something went wrong");
     } finally {
@@ -40,13 +57,46 @@ export default function Signup() {
 
   return (
     <div className="auth-page">
-      <div className="auth-card">
-        <p className="auth-brand">tRipin</p>
+      <div className="auth-card auth-card--wide">
+        <p className="auth-brand">TRIPIN</p>
         <h1>Create account</h1>
         <p className="auth-sub">
-          Sign up to plan itineraries and chat with your travel agent.
+          Sign up with your name and birthday — we’ll greet you personally in the app.
         </p>
         <form onSubmit={onSubmit}>
+          <div className="auth-row">
+            <label>
+              First name
+              <input
+                type="text"
+                autoComplete="given-name"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                required
+              />
+            </label>
+            <label>
+              Surname
+              <input
+                type="text"
+                autoComplete="family-name"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                required
+              />
+            </label>
+          </div>
+          <label>
+            Date of birth
+            <input
+              type="date"
+              value={dateOfBirth}
+              onChange={(e) => setDateOfBirth(e.target.value)}
+              max={new Date().toISOString().slice(0, 10)}
+              min="1900-01-01"
+              required
+            />
+          </label>
           <label>
             Email
             <input

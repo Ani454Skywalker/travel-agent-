@@ -22,12 +22,23 @@ function formatApiError(body: unknown, fallback: string): string {
   return fallback;
 }
 
+export type RegisterPayload = {
+  email: string;
+  password: string;
+  first_name: string;
+  last_name: string;
+  date_of_birth: string;
+};
+
 type AuthContextValue = {
   token: string | null;
   email: string | null;
+  firstName: string | null;
+  lastName: string | null;
   ready: boolean;
   login: (email: string, password: string) => Promise<void>;
-  signup: (email: string, password: string) => Promise<void>;
+  /** Creates account only — does not log in. User must sign in on /login. */
+  register: (payload: RegisterPayload) => Promise<void>;
   logout: () => void;
 };
 
@@ -36,12 +47,16 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [token, setToken] = useState<string | null>(() => localStorage.getItem(TOKEN_KEY));
   const [email, setEmail] = useState<string | null>(null);
+  const [firstName, setFirstName] = useState<string | null>(null);
+  const [lastName, setLastName] = useState<string | null>(null);
   const [ready, setReady] = useState(!localStorage.getItem(TOKEN_KEY));
 
   const logout = useCallback(() => {
     localStorage.removeItem(TOKEN_KEY);
     setToken(null);
     setEmail(null);
+    setFirstName(null);
+    setLastName(null);
     setReady(true);
   }, []);
 
@@ -53,14 +68,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       logout();
       return;
     }
-    const data = (await res.json()) as { email: string };
+    const data = (await res.json()) as {
+      email: string;
+      first_name?: string | null;
+      last_name?: string | null;
+    };
     setEmail(data.email);
+    setFirstName(data.first_name?.trim() || null);
+    setLastName(data.last_name?.trim() || null);
     setReady(true);
   }, [logout]);
 
   useEffect(() => {
     if (!token) {
       setEmail(null);
+      setFirstName(null);
+      setLastName(null);
       setReady(true);
       return;
     }
@@ -85,26 +108,36 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await loadMe(data.access_token);
   }, [loadMe]);
 
-  const signup = useCallback(async (e: string, password: string) => {
+  const register = useCallback(async (payload: RegisterPayload) => {
     const res = await fetch("/api/auth/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: e, password }),
+      body: JSON.stringify({
+        email: payload.email,
+        password: payload.password,
+        first_name: payload.first_name,
+        last_name: payload.last_name,
+        date_of_birth: payload.date_of_birth,
+      }),
     });
     if (!res.ok) {
       const err = await res.json().catch(() => null);
       throw new Error(formatApiError(err, "Sign up failed"));
     }
-    const data = (await res.json()) as { access_token: string };
-    localStorage.setItem(TOKEN_KEY, data.access_token);
-    setToken(data.access_token);
-    setReady(false);
-    await loadMe(data.access_token);
-  }, [loadMe]);
+  }, []);
 
   const value = useMemo(
-    () => ({ token, email, ready, login, signup, logout }),
-    [token, email, ready, login, signup, logout],
+    () => ({
+      token,
+      email,
+      firstName,
+      lastName,
+      ready,
+      login,
+      register,
+      logout,
+    }),
+    [token, email, firstName, lastName, ready, login, register, logout],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

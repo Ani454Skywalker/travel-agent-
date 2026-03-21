@@ -10,6 +10,7 @@ import os
 
 from database import engine
 from deps import get_current_user
+from migrate_schema import run_migrations
 from models import Base, User
 import routes_auth
 
@@ -19,6 +20,7 @@ STATIC_DIR = Path(__file__).resolve().parent / "static"
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     Base.metadata.create_all(bind=engine)
+    run_migrations()
     yield
 
 

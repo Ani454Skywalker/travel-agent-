@@ -1,10 +1,24 @@
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { ChatKit, useChatKit } from "@openai/chatkit-react";
 import { useAuth } from "../auth";
 
+function formatGreetingName(raw: string | null): string | null {
+  if (!raw?.trim()) return null;
+  const t = raw.trim();
+  return t.charAt(0).toUpperCase() + t.slice(1);
+}
+
 export default function Chat() {
-  const { token, email, logout } = useAuth();
+  const { token, firstName, logout } = useAuth();
   const [kitError, setKitError] = useState<string | null>(null);
+
+  const greeting = useMemo(() => {
+    const name = formatGreetingName(firstName);
+    if (name) {
+      return `Hello ${name}, how can I help you today?`;
+    }
+    return "Hello, how can I help you today?";
+  }, [firstName]);
 
   const getClientSecret = useCallback(
     (_existing: string | null) => {
@@ -47,35 +61,20 @@ export default function Chat() {
 
   return (
     <div className="app-shell">
-      <header className="app-top">
-        <div className="app-top-inner">
+      <header className="tripin-header">
+        <div className="tripin-header-row">
           <div>
-            <p className="auth-brand app-top-brand">tRipin</p>
-            <h1>Your travel &amp; itinerary agent</h1>
-            <p className="app-top-tagline">
-              Plan routes, days, and ideas — <strong>tRipin</strong> works as both an{" "}
-              <strong>itinerary agent</strong> and a <strong>travel agent</strong> for you.
-            </p>
+            <p className="tripin-wordmark">TRIPIN</p>
+            <p className="tripin-tagline">Your travel and Itinerary agent</p>
           </div>
-          <div className="app-top-actions">
-            {email ? (
-              <span className="user-email" title={email}>
-                {email}
-              </span>
-            ) : null}
-            <button type="button" className="btn-ghost" onClick={() => logout()}>
-              Log out
-            </button>
-            <a href="/docs" className="btn-ghost" target="_blank" rel="noreferrer">
-              API docs
-            </a>
-          </div>
+          <button type="button" className="btn-logout-minimal" onClick={() => logout()}>
+            Log out
+          </button>
         </div>
       </header>
-      <p className="app-intro">
-        Ask about trips, flights, packing, day-by-day plans, and destinations. Your
-        conversations are tied to your account.
-      </p>
+
+      <p className="tripin-greeting">{greeting}</p>
+
       {kitError ? <div className="kit-error">{kitError}</div> : null}
       <div className="chat-frame">
         <ChatKit control={control} style={{ width: "100%", height: "100%" }} />

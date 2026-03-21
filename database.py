@@ -1,3 +1,10 @@
+"""
+User accounts live in a SQL database:
+- Local default: SQLite file `tripin.db` in the project folder.
+- Production (Railway): set DATABASE_URL to Postgres (e.g. add Railway Postgres);
+  otherwise SQLite may reset when the container restarts.
+"""
+
 import os
 
 from sqlalchemy import create_engine
