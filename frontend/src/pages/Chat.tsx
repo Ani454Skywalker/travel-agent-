@@ -50,7 +50,15 @@ export default function Chat() {
     api: {
       getClientSecret,
     },
-    theme: "dark",
+    theme: {
+      colorScheme: "dark",
+      color: {
+        surface: {
+          background: "#000000",
+          foreground: "#ffffff",
+        },
+      },
+    },
     startScreen: {
       greeting: startGreeting,
     },
