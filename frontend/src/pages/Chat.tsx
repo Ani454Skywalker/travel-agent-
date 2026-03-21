@@ -52,10 +52,20 @@ export default function Chat() {
     },
     theme: {
       colorScheme: "dark",
+      radius: "round",
       color: {
         surface: {
           background: "#000000",
-          foreground: "#ffffff",
+          foreground: "#d1d5db",
+        },
+        accent: {
+          primary: "#9ca3af",
+          level: 1,
+        },
+        grayscale: {
+          hue: 230,
+          tint: 5,
+          shade: -2,
         },
       },
     },
@@ -64,6 +74,7 @@ export default function Chat() {
     },
     composer: {
       attachments: { enabled: false },
+      placeholder: "",
     },
     onError: ({ error }) => {
       const msg = error?.message ?? String(error);
