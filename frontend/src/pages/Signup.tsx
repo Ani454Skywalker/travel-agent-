@@ -5,6 +5,14 @@ import { useAuth } from "../auth";
 export default function Signup() {
   const { register, token, email, ready } = useAuth();
   const navigate = useNavigate();
+  const [emailInput, setEmailInput] = useState("");
+  const [password, setPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [dateOfBirth, setDateOfBirth] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [pending, setPending] = useState(false);
+
   if (token && !ready) {
     return (
       <div className="auth-page">
@@ -15,13 +23,6 @@ export default function Signup() {
   if (ready && token && email) {
     return <Navigate to="/" replace />;
   }
-  const [emailInput, setEmailInput] = useState("");
-  const [password, setPassword] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [dateOfBirth, setDateOfBirth] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [pending, setPending] = useState(false);
 
   async function onSubmit(ev: FormEvent) {
     ev.preventDefault();

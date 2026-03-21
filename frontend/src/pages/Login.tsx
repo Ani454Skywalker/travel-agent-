@@ -1,12 +1,17 @@
 import { FormEvent, useState } from "react";
-import { Link, Navigate, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, Navigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../auth";
 
 export default function Login() {
   const { login, token, email, ready } = useAuth();
-  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
+  const [emailInput, setEmailInput] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [pending, setPending] = useState(false);
+
   const justRegistered = searchParams.get("registered") === "1";
+
   if (token && !ready) {
     return (
       <div className="auth-page">
@@ -17,10 +22,6 @@ export default function Login() {
   if (ready && token && email) {
     return <Navigate to="/" replace />;
   }
-  const [emailInput, setEmailInput] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [pending, setPending] = useState(false);
 
   async function onSubmit(ev: FormEvent) {
     ev.preventDefault();
@@ -28,7 +29,7 @@ export default function Login() {
     setPending(true);
     try {
       await login(emailInput.trim(), password);
-      navigate("/", { replace: true });
+      /* Redirect happens on next render via <Navigate> when token/email/ready update */
     } catch (e) {
       setError(e instanceof Error ? e.message : "Something went wrong");
     } finally {
