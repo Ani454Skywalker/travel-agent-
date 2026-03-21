@@ -51,3 +51,24 @@ body {
   box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
   background: #15202b;
 }
+
+/* Custom element defaults to inline; needs block + size or the UI looks “empty”. */
+openai-chatkit {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 200px;
+}
+
+.kit-error {
+  width: min(100%, 420px);
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  background: rgba(244, 67, 54, 0.12);
+  border: 1px solid rgba(244, 67, 54, 0.35);
+  color: #ffb4ab;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  word-break: break-word;
+}

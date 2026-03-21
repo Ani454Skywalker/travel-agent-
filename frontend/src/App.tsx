@@ -1,3 +1,4 @@
+import { useCallback, useState } from "react";
 import { ChatKit, useChatKit } from "@openai/chatkit-react";
 
 async function fetchClientSecret(): Promise<string> {
@@ -14,13 +15,25 @@ async function fetchClientSecret(): Promise<string> {
 }
 
 export default function App() {
+  const [kitError, setKitError] = useState<string | null>(null);
+
+  const getClientSecret = useCallback((_existing: string | null) => {
+    setKitError(null);
+    return fetchClientSecret();
+  }, []);
+
   const { control } = useChatKit({
     api: {
-      getClientSecret: (_existing) => fetchClientSecret(),
+      getClientSecret,
     },
     theme: "dark",
     composer: {
       attachments: { enabled: false },
+    },
+    onError: ({ error }) => {
+      const msg = error?.message ?? String(error);
+      setKitError(msg);
+      console.error("ChatKit error:", error);
     },
   });
 
@@ -31,6 +44,7 @@ export default function App() {
         Ask about trips, flights, and plans. This chat uses your ChatKit
         workflow on the server — your OpenAI key stays private.
       </p>
+      {kitError ? <div className="kit-error">{kitError}</div> : null}
       <div className="chat-frame">
         <ChatKit control={control} style={{ width: "100%", height: "100%" }} />
       </div>
