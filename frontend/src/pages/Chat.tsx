@@ -65,22 +65,24 @@ export default function Chat() {
   });
 
   return (
-    <div className="app-shell">
-      <header className="tripin-header">
-        <div className="tripin-header-row">
-          <div>
-            <p className="tripin-wordmark">TRIPIN</p>
-            <p className="tripin-tagline">Your travel and Itinerary agent</p>
+    <div className="app-shell app-shell--chat">
+      <div className="chat-shell">
+        <header className="tripin-header tripin-header--in-chat">
+          <div className="tripin-header-row">
+            <div>
+              <p className="tripin-wordmark">TRIPIN</p>
+              <p className="tripin-tagline">Your travel and Itinerary agent</p>
+            </div>
+            <button type="button" className="btn-logout-minimal" onClick={() => logout()}>
+              Log out
+            </button>
           </div>
-          <button type="button" className="btn-logout-minimal" onClick={() => logout()}>
-            Log out
-          </button>
-        </div>
-      </header>
+        </header>
 
-      {kitError ? <div className="kit-error">{kitError}</div> : null}
-      <div className="chat-frame">
-        <ChatKit control={control} style={{ width: "100%", height: "100%" }} />
+        {kitError ? <div className="kit-error kit-error--in-chat">{kitError}</div> : null}
+        <div className="chat-frame">
+          <ChatKit control={control} style={{ width: "100%", height: "100%" }} />
+        </div>
       </div>
     </div>
   );

@@ -54,6 +54,87 @@ body {
   background: #000000;
 }
 
+/* Full-viewport chat (mobile): header + ChatKit in one column */
+.app-shell--chat {
+  min-height: 100dvh;
+  height: 100dvh;
+  max-height: 100dvh;
+  padding: 0;
+  align-items: stretch;
+  gap: 0;
+  overflow: hidden;
+}
+
+.chat-shell {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  background: #000000;
+}
+
+.tripin-header--in-chat {
+  max-width: none;
+  width: 100%;
+  flex-shrink: 0;
+  padding: max(0.5rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) 0.65rem
+    max(1rem, env(safe-area-inset-left));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.kit-error--in-chat {
+  width: 100%;
+  max-width: none;
+  flex-shrink: 0;
+  margin: 0;
+  border-radius: 0;
+  border-left: none;
+  border-right: none;
+}
+
+.app-shell--chat .chat-frame {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  max-width: none;
+  height: auto;
+  border-radius: 0;
+  border: none;
+  box-shadow: none;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+@media (min-width: 768px) {
+  .app-shell--chat {
+    height: auto;
+    max-height: none;
+    min-height: 100vh;
+    padding: 1.5rem 1rem 2rem;
+    align-items: center;
+    overflow: visible;
+  }
+
+  .chat-shell {
+    max-width: 420px;
+    width: 100%;
+    height: min(85vh, 680px);
+    max-height: min(85vh, 680px);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
+    overflow: hidden;
+  }
+
+  .tripin-header--in-chat {
+    padding: 1rem 1rem 0.75rem;
+  }
+
+  .app-shell--chat .chat-frame {
+    padding-bottom: 0;
+  }
+}
+
 /* Custom element defaults to inline; needs block + size or the UI looks “empty”. */
 openai-chatkit {
   display: block;
