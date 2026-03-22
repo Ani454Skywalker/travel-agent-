@@ -7,11 +7,38 @@ import { useAuth } from "../auth";
 const FONT_STACK =
   "'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif";
 
-/** Must match `--tripin-input` / `--tripin-bg` in `index.css` (dark charcoal, not white). */
-const TRIPIN_INPUT = "#212121";
-const TRIPIN_TEXT = "#e8e8e8";
+/** Writing bar = `--tripin-input` in `index.css` (#40414f). Main app = #343541. */
+const TRIPIN_COMPOSER_BG = "#40414f";
+const TRIPIN_TEXT = "#ececf1";
+
 const CHAT_COMPOSER_PLACEHOLDER =
-  "Chat, plan your next trip — ideas, dates, destinations…";
+  "Chat, plan your next trip, ideas, dates, destinations…";
+
+/** Forced on every `setOptions` so hosted ChatKit cannot leave the composer white. */
+const TRIPIN_CHATKIT_THEME = {
+  colorScheme: "dark" as const,
+  radius: "round" as const,
+  density: "normal" as const,
+  typography: {
+    baseSize: 16 as const,
+    fontFamily: FONT_STACK,
+  },
+  color: {
+    surface: {
+      background: TRIPIN_COMPOSER_BG,
+      foreground: TRIPIN_TEXT,
+    },
+    accent: {
+      primary: "#565869",
+      level: 1 as const,
+    },
+    grayscale: {
+      hue: 237,
+      tint: 1 as const,
+      shade: 0 as const,
+    },
+  },
+};
 
 function displayFirstName(raw: string | null): string | null {
   if (!raw?.trim()) return null;
@@ -64,30 +91,7 @@ export default function Chat() {
     api: {
       getClientSecret,
     },
-    theme: {
-      colorScheme: "dark",
-      radius: "round",
-      density: "normal",
-      typography: {
-        baseSize: 16,
-        fontFamily: FONT_STACK,
-      },
-      color: {
-        surface: {
-          background: TRIPIN_INPUT,
-          foreground: TRIPIN_TEXT,
-        },
-        accent: {
-          primary: "#4a4a4a",
-          level: 0,
-        },
-        grayscale: {
-          hue: 0,
-          tint: 0,
-          shade: -3,
-        },
-      },
-    },
+    theme: TRIPIN_CHATKIT_THEME,
     startScreen: {
       greeting: startGreeting,
     },
@@ -120,7 +124,10 @@ export default function Chat() {
       const opts = controlRef.current?.options;
       if (!opts) return;
       try {
-        kitHost.setOptions(opts);
+        kitHost.setOptions({
+          ...opts,
+          theme: TRIPIN_CHATKIT_THEME,
+        });
       } catch {
         /* ignore */
       }
@@ -128,8 +135,11 @@ export default function Chat() {
     const onReady = () => {
       pushOptions();
       requestAnimationFrame(pushOptions);
-      window.setTimeout(pushOptions, 150);
-      window.setTimeout(pushOptions, 600);
+      window.setTimeout(pushOptions, 100);
+      window.setTimeout(pushOptions, 350);
+      window.setTimeout(pushOptions, 800);
+      window.setTimeout(pushOptions, 1600);
+      window.setTimeout(pushOptions, 3200);
     };
     kitHost.addEventListener("chatkit.ready", onReady);
     onReady();
