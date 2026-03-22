@@ -1,5 +1,6 @@
-import { useCallback, useMemo, useState } from "react";
-import { ChatKit, useChatKit } from "@openai/chatkit-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { ChatKit, useChatKit, type ChatKitControl } from "@openai/chatkit-react";
+import type { OpenAIChatKit } from "@openai/chatkit";
 import { useAuth } from "../auth";
 
 /** Same stack as `body` / Google Fonts link in `index.html`. */
@@ -31,6 +32,9 @@ export default function Chat() {
   }, [firstName]);
 
   const [kitError, setKitError] = useState<string | null>(null);
+
+  /** Latest control for `onReady` (avoids stale closure). */
+  const controlRef = useRef<ChatKitControl | null>(null);
 
   const getClientSecret = useCallback(
     (_existing: string | null) => {
@@ -98,6 +102,40 @@ export default function Chat() {
     },
   });
 
+  controlRef.current = control;
+
+  const [kitHost, setKitHost] = useState<OpenAIChatKit | null>(null);
+  const bindKitHost = useCallback((node: OpenAIChatKit | null) => {
+    setKitHost(node);
+  }, []);
+
+  /**
+   * Hosted ChatKit can re-apply defaults after the session attaches (composer
+   * snaps back to a light/white strip). Re-push options on `chatkit.ready` and
+   * a few delayed ticks so `theme.color.surface` is honored.
+   */
+  useEffect(() => {
+    if (!kitHost) return;
+    const pushOptions = () => {
+      const opts = controlRef.current?.options;
+      if (!opts) return;
+      try {
+        kitHost.setOptions(opts);
+      } catch {
+        /* ignore */
+      }
+    };
+    const onReady = () => {
+      pushOptions();
+      requestAnimationFrame(pushOptions);
+      window.setTimeout(pushOptions, 150);
+      window.setTimeout(pushOptions, 600);
+    };
+    kitHost.addEventListener("chatkit.ready", onReady);
+    onReady();
+    return () => kitHost.removeEventListener("chatkit.ready", onReady);
+  }, [kitHost]);
+
   return (
     <div className="app-shell app-shell--chat">
       <div className="chat-shell">
@@ -115,7 +153,11 @@ export default function Chat() {
 
         {kitError ? <div className="kit-error kit-error--in-chat">{kitError}</div> : null}
         <div className="chat-frame">
-          <ChatKit control={control} style={{ width: "100%", height: "100%" }} />
+          <ChatKit
+            ref={bindKitHost}
+            control={control}
+            style={{ width: "100%", height: "100%" }}
+          />
         </div>
       </div>
     </div>
