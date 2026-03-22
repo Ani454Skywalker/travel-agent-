@@ -41,7 +41,7 @@ const TRIPIN_CHATKIT_THEME = {
     grayscale: {
       hue: 0,
       tint: 0 as const,
-      shade: -3 as const,
+      shade: -4 as const,
     },
   },
 };
