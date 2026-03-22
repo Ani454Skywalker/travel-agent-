@@ -7,14 +7,20 @@ import { useAuth } from "../auth";
 const FONT_STACK =
   "'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif";
 
-/** All black surfaces; light text (see `:root` in `index.css`). */
-const TRIPIN_COMPOSER_BG = "#000000";
-const TRIPIN_TEXT = "#ffffff";
+/**
+ * ChatKit often renders a light composer strip. White/light text on that bar is
+ * unreadable — use dark grey/black foreground so typed text is visible.
+ * (App chrome outside the widget stays black in `index.css`.)
+ */
+/** Light-enough strip so dark letters read clearly; tweak if ChatKit still forces white. */
+const TRIPIN_CHATKIT_SURFACE_BG = "#e0e0e0";
+/** Dark grey / near-black — what you type and icons on the composer row */
+const TRIPIN_CHATKIT_SURFACE_FG = "#0a0a0a";
 
 const CHAT_COMPOSER_PLACEHOLDER =
   "Chat, plan your next trip, ideas, dates, destinations…";
 
-/** Forced on every `setOptions` so hosted ChatKit cannot leave the composer white. */
+/** Forced on every `setOptions` so hosted ChatKit keeps these composer colors. */
 const TRIPIN_CHATKIT_THEME = {
   colorScheme: "dark" as const,
   radius: "pill" as const,
@@ -25,17 +31,17 @@ const TRIPIN_CHATKIT_THEME = {
   },
   color: {
     surface: {
-      background: TRIPIN_COMPOSER_BG,
-      foreground: TRIPIN_TEXT,
+      background: TRIPIN_CHATKIT_SURFACE_BG,
+      foreground: TRIPIN_CHATKIT_SURFACE_FG,
     },
     accent: {
-      primary: "#5f6368",
+      primary: "#7c7c7c",
       level: 1 as const,
     },
     grayscale: {
       hue: 0,
       tint: 0 as const,
-      shade: -4 as const,
+      shade: -3 as const,
     },
   },
 };
@@ -49,13 +55,13 @@ function displayFirstName(raw: string | null): string | null {
 export default function Chat() {
   const { token, firstName, logout } = useAuth();
 
-  /** ChatKit start screen (replaces default “What can I help with today?”). */
+  /** ChatKit start screen greeting. */
   const startGreeting = useMemo(() => {
     const name = displayFirstName(firstName);
     if (name) {
-      return `What can I help you with today, ${name}?`;
+      return `How can I help you today, ${name}?`;
     }
-    return "What can I help you with today?";
+    return "How can I help you today?";
   }, [firstName]);
 
   const [kitError, setKitError] = useState<string | null>(null);
