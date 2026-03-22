@@ -3,45 +3,67 @@ import { ChatKit, useChatKit, type ChatKitControl } from "@openai/chatkit-react"
 import type { OpenAIChatKit } from "@openai/chatkit";
 import { useAuth } from "../auth";
 
-/** Same stack as `body` / Google Fonts link in `index.html`. */
-const FONT_STACK =
-  "'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif";
+/** From ChatKit Studio export; `surface.foreground` must not match background (Studio had both #000). */
+const OPENAI_SANS_STACK =
+  '"OpenAI Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif';
 
-/**
- * ChatKit often renders a light composer strip. White/light text on that bar is
- * unreadable — use dark grey/black foreground so typed text is visible.
- * (App chrome outside the widget stays black in `index.css`.)
- */
-/** Light-enough strip so dark letters read clearly; tweak if ChatKit still forces white. */
-const TRIPIN_CHATKIT_SURFACE_BG = "#e0e0e0";
-/** Dark grey / near-black — what you type and icons on the composer row */
-const TRIPIN_CHATKIT_SURFACE_FG = "#0a0a0a";
+const OPENAI_SANS_SOURCES = [
+  {
+    family: "OpenAI Sans",
+    src: "https://cdn.openai.com/common/fonts/openai-sans/v2/OpenAISans-Regular.woff2",
+    weight: 400,
+    style: "normal" as const,
+    display: "swap" as const,
+  },
+  {
+    family: "OpenAI Sans",
+    src: "https://cdn.openai.com/common/fonts/openai-sans/v2/OpenAISans-Medium.woff2",
+    weight: 500,
+    style: "normal" as const,
+    display: "swap" as const,
+  },
+  {
+    family: "OpenAI Sans",
+    src: "https://cdn.openai.com/common/fonts/openai-sans/v2/OpenAISans-Semibold.woff2",
+    weight: 600,
+    style: "normal" as const,
+    display: "swap" as const,
+  },
+  {
+    family: "OpenAI Sans",
+    src: "https://cdn.openai.com/common/fonts/openai-sans/v2/OpenAISans-Bold.woff2",
+    weight: 700,
+    style: "normal" as const,
+    display: "swap" as const,
+  },
+];
 
-const CHAT_COMPOSER_PLACEHOLDER =
-  "Chat, plan your next trip, ideas, dates, destinations…";
+const CHAT_COMPOSER_PLACEHOLDER = "Plan your next ideas";
 
-/** Forced on every `setOptions` so hosted ChatKit keeps these composer colors. */
+/** Synced with your Studio theme; no `startScreen.prompts` / tools / models (TRIPIN backend). */
 const TRIPIN_CHATKIT_THEME = {
   colorScheme: "dark" as const,
   radius: "pill" as const,
   density: "normal" as const,
   typography: {
     baseSize: 16 as const,
-    fontFamily: FONT_STACK,
+    fontFamily: OPENAI_SANS_STACK,
+    fontFamilyMono:
+      'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "DejaVu Sans Mono", "Courier New", monospace',
+    fontSources: OPENAI_SANS_SOURCES,
   },
   color: {
-    surface: {
-      background: TRIPIN_CHATKIT_SURFACE_BG,
-      foreground: TRIPIN_CHATKIT_SURFACE_FG,
-    },
-    accent: {
-      primary: "#7c7c7c",
-      level: 1 as const,
-    },
     grayscale: {
       hue: 0,
       tint: 0 as const,
-      shade: -4 as const,
+    },
+    accent: {
+      primary: "#000000",
+      level: 3 as const,
+    },
+    surface: {
+      background: "#000000",
+      foreground: "#ffffff",
     },
   },
 };
