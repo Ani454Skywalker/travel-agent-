@@ -4,12 +4,12 @@
   box-sizing: border-box;
 }
 
-/* TRIPIN greys — match charcoal UI like your reference (#343541 family) */
+/* TRIPIN — dark charcoal (~#212121); composer uses same family, not white */
 :root {
-  --tripin-bg: #343541;
-  --tripin-input: #40414f;
-  --tripin-text: #ececf1;
-  --tripin-border: rgba(255, 255, 255, 0.12);
+  --tripin-bg: #212121;
+  --tripin-input: #212121;
+  --tripin-text: #e8e8e8;
+  --tripin-border: rgba(255, 255, 255, 0.1);
 }
 
 html,

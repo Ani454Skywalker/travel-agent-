@@ -6,9 +6,9 @@ import { useAuth } from "../auth";
 const FONT_STACK =
   "'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif";
 
-/** Composer row; canvas `#343541` is `--tripin-bg` in `index.css` + grayscale below. */
-const TRIPIN_INPUT = "#40414f";
-const TRIPIN_TEXT = "#ececf1";
+/** Must match `--tripin-input` / `--tripin-bg` in `index.css` (dark charcoal, not white). */
+const TRIPIN_INPUT = "#212121";
+const TRIPIN_TEXT = "#e8e8e8";
 const CHAT_COMPOSER_PLACEHOLDER =
   "Chat, plan your next trip — ideas, dates, destinations…";
 
@@ -74,13 +74,13 @@ export default function Chat() {
           foreground: TRIPIN_TEXT,
         },
         accent: {
-          primary: "#565869",
+          primary: "#4a4a4a",
           level: 0,
         },
         grayscale: {
-          hue: 237,
-          tint: 1,
-          shade: 0,
+          hue: 0,
+          tint: 0,
+          shade: -3,
         },
       },
     },
