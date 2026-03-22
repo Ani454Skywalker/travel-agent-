@@ -57,10 +57,7 @@ const TRIPIN_CHATKIT_THEME: NonNullable<ChatKitOptions["theme"]> = {
   },
 };
 
-/**
- * Studio `composer` export. Add your second tool / extra models here when you have full IDs from Studio
- * (they must exist on your workflow).
- */
+/** Studio-style composer; no `models` so the model picker (e.g. Crisp) is hidden. */
 const TRIPIN_CHATKIT_COMPOSER: NonNullable<ChatKitOptions["composer"]> = {
   placeholder: "Plan your next ideas ",
   attachments: {
@@ -76,13 +73,6 @@ const TRIPIN_CHATKIT_COMPOSER: NonNullable<ChatKitOptions["composer"]> = {
       placeholderOverride: "Search documentation",
       icon: "book-open",
       pinned: false,
-    },
-  ],
-  models: [
-    {
-      id: "crisp",
-      label: "Crisp",
-      description: "Concise and factual",
     },
   ],
 };
@@ -192,9 +182,9 @@ export default function Chat() {
   }, []);
 
   /**
-   * Hosted ChatKit can re-apply defaults after the session attaches (composer
-   * strip, theme, and workflow starter prompts such as “What is ChatKit?”).
-   * Re-push on `chatkit.ready` so our theme and TRIPIN prompts win.
+   * Hosted ChatKit can re-apply defaults after the session attaches (composer,
+   * theme, model picker, starter prompts). Re-push on `chatkit.ready` so TRIPIN
+   * options win.
    */
   useEffect(() => {
     if (!kitHost) return;
@@ -205,6 +195,7 @@ export default function Chat() {
         kitHost.setOptions({
           ...opts,
           theme: TRIPIN_CHATKIT_THEME,
+          composer: TRIPIN_CHATKIT_COMPOSER,
           startScreen: {
             greeting: startGreetingRef.current,
             prompts: TRIPIN_START_PROMPTS,
