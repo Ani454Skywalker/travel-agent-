@@ -166,6 +166,10 @@ export default function Chat() {
     [startGreeting],
   );
 
+  /** Latest greeting for `setOptions` re-pushes (hosted ChatKit can restore Studio prompts). */
+  const startGreetingRef = useRef(startGreeting);
+  startGreetingRef.current = startGreeting;
+
   const { control } = useChatKit({
     api: {
       getClientSecret,
@@ -189,8 +193,8 @@ export default function Chat() {
 
   /**
    * Hosted ChatKit can re-apply defaults after the session attaches (composer
-   * snaps back to a light/white strip). Re-push options on `chatkit.ready` and
-   * a few delayed ticks so `theme.color.surface` is honored.
+   * strip, theme, and workflow starter prompts such as “What is ChatKit?”).
+   * Re-push on `chatkit.ready` so our theme and TRIPIN prompts win.
    */
   useEffect(() => {
     if (!kitHost) return;
@@ -201,6 +205,10 @@ export default function Chat() {
         kitHost.setOptions({
           ...opts,
           theme: TRIPIN_CHATKIT_THEME,
+          startScreen: {
+            greeting: startGreetingRef.current,
+            prompts: TRIPIN_START_PROMPTS,
+          },
         });
       } catch {
         /* ignore */
