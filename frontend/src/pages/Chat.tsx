@@ -7,7 +7,7 @@ import { useAuth } from "../auth";
 const FONT_STACK =
   "'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif";
 
-/** Chat area + writing bar backgrounds = `#000000` (see `:root` in `index.css`). */
+/** All black surfaces; light text (see `:root` in `index.css`). */
 const TRIPIN_COMPOSER_BG = "#000000";
 const TRIPIN_TEXT = "#ffffff";
 
