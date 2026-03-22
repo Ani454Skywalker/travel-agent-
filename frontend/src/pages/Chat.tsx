@@ -7,9 +7,9 @@ import { useAuth } from "../auth";
 const FONT_STACK =
   "'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif";
 
-/** Writing bar = `--tripin-input` in `index.css` (#40414f). Main app = #343541. */
-const TRIPIN_COMPOSER_BG = "#40414f";
-const TRIPIN_TEXT = "#ececf1";
+/** Gemini-style: composer `#2D2E30`, main text `#FFFFFF` (see `:root` in `index.css`). */
+const TRIPIN_COMPOSER_BG = "#2d2e30";
+const TRIPIN_TEXT = "#ffffff";
 
 const CHAT_COMPOSER_PLACEHOLDER =
   "Chat, plan your next trip, ideas, dates, destinations…";
@@ -17,7 +17,7 @@ const CHAT_COMPOSER_PLACEHOLDER =
 /** Forced on every `setOptions` so hosted ChatKit cannot leave the composer white. */
 const TRIPIN_CHATKIT_THEME = {
   colorScheme: "dark" as const,
-  radius: "round" as const,
+  radius: "pill" as const,
   density: "normal" as const,
   typography: {
     baseSize: 16 as const,
@@ -29,13 +29,13 @@ const TRIPIN_CHATKIT_THEME = {
       foreground: TRIPIN_TEXT,
     },
     accent: {
-      primary: "#565869",
+      primary: "#5f6368",
       level: 1 as const,
     },
     grayscale: {
-      hue: 237,
-      tint: 1 as const,
-      shade: 0 as const,
+      hue: 0,
+      tint: 0 as const,
+      shade: -2 as const,
     },
   },
 };
