@@ -4,6 +4,14 @@
   box-sizing: border-box;
 }
 
+/* TRIPIN greys — match charcoal UI like your reference (#343541 family) */
+:root {
+  --tripin-bg: #343541;
+  --tripin-input: #40414f;
+  --tripin-text: #ececf1;
+  --tripin-border: rgba(255, 255, 255, 0.12);
+}
+
 html,
 body,
 #root {
@@ -19,8 +27,8 @@ body {
   font-family: inherit;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: #141416;
-  color: #ffffff;
+  background: var(--tripin-bg);
+  color: var(--tripin-text);
 }
 
 .app-shell {
@@ -53,9 +61,9 @@ body {
   height: min(72vh, 640px);
   border-radius: 16px;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
-  background: #2a2a31;
+  border: 1px solid var(--tripin-border);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+  background: var(--tripin-bg);
 }
 
 /* Full-viewport chat (mobile): header + ChatKit in one column */
@@ -75,14 +83,14 @@ body {
   flex: 1;
   min-height: 0;
   width: 100%;
-  background: #2a2a31;
+  background: var(--tripin-bg);
 }
 
 .tripin-header--in-chat {
   max-width: none;
   width: 100%;
   flex-shrink: 0;
-  background: #2a2a31;
+  background: var(--tripin-bg);
   font-family: inherit;
   padding: max(0.5rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) 0.65rem
     max(1rem, env(safe-area-inset-left));
@@ -92,7 +100,7 @@ body {
 
 /* Beat `.app-shell p` (grey + centered) so wordmark + tagline match */
 .app-shell--chat .tripin-header--in-chat p {
-  color: #ffffff;
+  color: var(--tripin-text);
   text-align: left;
   max-width: none;
 }
@@ -109,7 +117,7 @@ body {
   font-size: 0.9rem;
   font-weight: 500;
   line-height: 1.35;
-  color: #ffffff;
+  color: var(--tripin-text);
 }
 
 .kit-error--in-chat {
@@ -150,8 +158,8 @@ body {
     height: min(85vh, 680px);
     max-height: min(85vh, 680px);
     border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
+    border: 1px solid var(--tripin-border);
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
     overflow: hidden;
   }
 
@@ -191,7 +199,7 @@ openai-chatkit {
   align-items: center;
   justify-content: center;
   padding: 2rem 1rem;
-  background: #141416;
+  background: var(--tripin-bg);
 }
 
 .auth-card {
@@ -200,9 +208,9 @@ openai-chatkit {
   min-width: 0;
   padding: 2rem 1.75rem;
   border-radius: 16px;
-  background: #0a0a0a;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.85);
+  background: var(--tripin-bg);
+  border: 1px solid var(--tripin-border);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.35);
 }
 
 .auth-card--wide {
@@ -248,7 +256,7 @@ openai-chatkit {
   padding: 0;
   border: none;
   background: none;
-  color: #ffffff;
+  color: var(--tripin-text);
   font-size: 0.8rem;
   text-decoration: underline;
   cursor: pointer;
@@ -302,9 +310,9 @@ openai-chatkit {
   max-width: 100%;
   padding: 0.65rem 0.75rem;
   border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  background: #000000;
-  color: #f5f5f5;
+  border: 1px solid var(--tripin-border);
+  background: var(--tripin-input);
+  color: var(--tripin-text);
   font-size: 1rem;
 }
 
@@ -317,17 +325,17 @@ openai-chatkit {
 .auth-card button[type="submit"] {
   margin-top: 0.25rem;
   padding: 0.75rem 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.35);
+  border: 1px solid var(--tripin-border);
   border-radius: 999px;
-  background: #ffffff;
-  color: #000000;
+  background: var(--tripin-text);
+  color: var(--tripin-bg);
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
 }
 
 .auth-card button[type="submit"]:hover:not(:disabled) {
-  background: #e8e8e8;
+  background: #d8d8e0;
 }
 
 .auth-card button[type="submit"]:disabled {
@@ -355,7 +363,7 @@ openai-chatkit {
 }
 
 .auth-footer a {
-  color: #ffffff;
+  color: var(--tripin-text);
   text-decoration: underline;
   text-underline-offset: 3px;
   font-weight: 500;
@@ -461,29 +469,29 @@ openai-chatkit {
   font-size: 1.5rem;
   font-weight: 800;
   letter-spacing: 0.28em;
-  color: #ffffff;
+  color: var(--tripin-text);
 }
 
 .tripin-tagline {
   margin: 0.35rem 0 0;
   font-size: 0.95rem;
   font-weight: 500;
-  color: #ffffff;
+  color: var(--tripin-text);
   line-height: 1.35;
 }
 
 .btn-logout-minimal {
   flex-shrink: 0;
   padding: 0.35rem 0.65rem;
-  border: 1px solid rgba(255, 255, 255, 0.35);
+  border: 1px solid var(--tripin-border);
   border-radius: 8px;
   background: transparent;
-  color: #ffffff;
+  color: var(--tripin-text);
   font-size: 0.75rem;
   cursor: pointer;
 }
 
 .btn-logout-minimal:hover {
-  color: #ffffff;
-  border-color: rgba(255, 255, 255, 0.35);
+  color: var(--tripin-text);
+  border-color: rgba(255, 255, 255, 0.22);
 }
