@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ChatKit, useChatKit, type ChatKitControl } from "@openai/chatkit-react";
-import type { OpenAIChatKit } from "@openai/chatkit";
+import type { ChatKitOptions, OpenAIChatKit } from "@openai/chatkit";
 import { useAuth } from "../auth";
 
-/** From ChatKit Studio export; `surface.foreground` must not match background (Studio had both #000). */
+/** Studio export used both #000. `foreground: #fff` paints the composer strip light in dark mode — keep #000 for a black bar. */
 const OPENAI_SANS_STACK =
   '"OpenAI Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif';
 
@@ -38,35 +38,83 @@ const OPENAI_SANS_SOURCES = [
   },
 ];
 
-const CHAT_COMPOSER_PLACEHOLDER = "Plan your next ideas";
-
-/** Synced with your Studio theme; no `startScreen.prompts` / tools / models (TRIPIN backend). */
-const TRIPIN_CHATKIT_THEME = {
-  colorScheme: "dark" as const,
-  radius: "pill" as const,
-  density: "normal" as const,
+/** Matches your ChatKit Studio `theme` export (fonts: Regular–Bold woff2 set). */
+const TRIPIN_CHATKIT_THEME: NonNullable<ChatKitOptions["theme"]> = {
+  colorScheme: "dark",
+  radius: "pill",
+  density: "normal",
+  color: {
+    grayscale: { hue: 0, tint: 0 },
+    accent: { primary: "#000000", level: 3 },
+    surface: { background: "#000000", foreground: "#000000" },
+  },
   typography: {
-    baseSize: 16 as const,
+    baseSize: 16,
     fontFamily: OPENAI_SANS_STACK,
     fontFamilyMono:
       'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "DejaVu Sans Mono", "Courier New", monospace',
     fontSources: OPENAI_SANS_SOURCES,
   },
-  color: {
-    grayscale: {
-      hue: 0,
-      tint: 0 as const,
-    },
-    accent: {
-      primary: "#000000",
-      level: 3 as const,
-    },
-    surface: {
-      background: "#000000",
-      foreground: "#ffffff",
-    },
-  },
 };
+
+/**
+ * Studio `composer` export. Add your second tool / extra models here when you have full IDs from Studio
+ * (they must exist on your workflow).
+ */
+const TRIPIN_CHATKIT_COMPOSER: NonNullable<ChatKitOptions["composer"]> = {
+  placeholder: "Plan your next ideas ",
+  attachments: {
+    enabled: true,
+    maxCount: 5,
+    maxSize: 10 * 1024 * 1024,
+  },
+  tools: [
+    {
+      id: "search_docs",
+      label: "Search docs",
+      shortLabel: "Docs",
+      placeholderOverride: "Search documentation",
+      icon: "book-open",
+      pinned: false,
+    },
+  ],
+  models: [
+    {
+      id: "crisp",
+      label: "Crisp",
+      description: "Concise and factual",
+    },
+  ],
+};
+
+/** First prompt from Studio; four TRIPIN starters (replace with your full Studio `prompts` array if you export it). */
+const TRIPIN_START_PROMPTS: NonNullable<NonNullable<ChatKitOptions["startScreen"]>["prompts"]> = [
+  {
+    icon: "circle-question",
+    label: "What is ChatKit?",
+    prompt: "What is ChatKit?",
+  },
+  {
+    icon: "suitcase",
+    label: "Plan a weekend trip",
+    prompt: "Help me plan a relaxing weekend trip.",
+  },
+  {
+    icon: "maps",
+    label: "Build an itinerary",
+    prompt: "Create a day-by-day itinerary for my trip.",
+  },
+  {
+    icon: "map-pin",
+    label: "Things to do",
+    prompt: "What should I see and do in my destination?",
+  },
+  {
+    icon: "lightbulb",
+    label: "Travel tips",
+    prompt: "Give me practical travel tips for my trip.",
+  },
+];
 
 function displayFirstName(raw: string | null): string | null {
   if (!raw?.trim()) return null;
@@ -115,18 +163,21 @@ export default function Chat() {
     [token],
   );
 
+  const startScreen = useMemo(
+    () => ({
+      greeting: startGreeting,
+      prompts: TRIPIN_START_PROMPTS,
+    }),
+    [startGreeting],
+  );
+
   const { control } = useChatKit({
     api: {
       getClientSecret,
     },
     theme: TRIPIN_CHATKIT_THEME,
-    startScreen: {
-      greeting: startGreeting,
-    },
-    composer: {
-      attachments: { enabled: false },
-      placeholder: CHAT_COMPOSER_PLACEHOLDER,
-    },
+    startScreen,
+    composer: TRIPIN_CHATKIT_COMPOSER,
     onError: ({ error }) => {
       const msg = error?.message ?? String(error);
       setKitError(msg);
