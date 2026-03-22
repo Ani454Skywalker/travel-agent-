@@ -87,13 +87,8 @@ const TRIPIN_CHATKIT_COMPOSER: NonNullable<ChatKitOptions["composer"]> = {
   ],
 };
 
-/** First prompt from Studio; four TRIPIN starters (replace with your full Studio `prompts` array if you export it). */
+/** TRIPIN starter prompts on the new-thread screen. */
 const TRIPIN_START_PROMPTS: NonNullable<NonNullable<ChatKitOptions["startScreen"]>["prompts"]> = [
-  {
-    icon: "circle-question",
-    label: "What is ChatKit?",
-    prompt: "What is ChatKit?",
-  },
   {
     icon: "suitcase",
     label: "Plan a weekend trip",
