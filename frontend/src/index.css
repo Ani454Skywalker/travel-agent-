@@ -4,17 +4,14 @@
   box-sizing: border-box;
 }
 
-/*
- * Gemini dark reference (mobile):
- * bg #000000 · pills #1E1F20 · composer #2D2E30 · text #FFFFFF · muted #C4C7C5
- */
+/* All backgrounds (fond, chat, composer strip, panels, inputs): pure black */
 :root {
   --tripin-bg: #000000;
-  --tripin-panel: #1e1f20;
-  --tripin-input: #2d2e30;
+  --tripin-panel: #000000;
+  --tripin-input: #000000;
   --tripin-text: #ffffff;
   --tripin-text-muted: #c4c7c5;
-  --tripin-border: rgba(255, 255, 255, 0.08);
+  --tripin-border: rgba(255, 255, 255, 0.1);
 }
 
 html,

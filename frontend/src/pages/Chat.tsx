@@ -7,8 +7,8 @@ import { useAuth } from "../auth";
 const FONT_STACK =
   "'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif";
 
-/** Gemini-style: composer `#2D2E30`, main text `#FFFFFF` (see `:root` in `index.css`). */
-const TRIPIN_COMPOSER_BG = "#2d2e30";
+/** Chat area + writing bar backgrounds = `#000000` (see `:root` in `index.css`). */
+const TRIPIN_COMPOSER_BG = "#000000";
 const TRIPIN_TEXT = "#ffffff";
 
 const CHAT_COMPOSER_PLACEHOLDER =
@@ -35,7 +35,7 @@ const TRIPIN_CHATKIT_THEME = {
     grayscale: {
       hue: 0,
       tint: 0 as const,
-      shade: -2 as const,
+      shade: -4 as const,
     },
   },
 };
