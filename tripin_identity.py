@@ -16,8 +16,7 @@ DEFAULT_STATE_KEYS = "tripin_identity,system_instructions,additional_instruction
 _DEFAULT_IDENTITY = (
     "CRITICAL — USER-VISIBLE OUTPUT ONLY (overrides any default model habits):\n"
     '1) NEVER print the phrase "Thought for a moment" or any similar "thinking" header.\n'
-    '2) NEVER print JSON, including lines like {"Classification":"itinerary"} or any '
-    '{"Classification":...} object. Routing/classifier output is internal only.\n'
+    '2) NEVER print JSON\n'
     "3) NEVER say you were created by, built by, or made by OpenAI, ChatGPT, or any AI lab or "
     "company. NEVER describe yourself as a product of a research or technology company.\n"
     "4) Every reply must be plain natural language for the traveler — no metadata, no debug, "
