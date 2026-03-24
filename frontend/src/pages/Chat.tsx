@@ -250,12 +250,26 @@ export default function Chat() {
     window.alert(`${label} is coming soon.`);
   }, []);
 
+  const onHistoryClick = useCallback(() => {
+    setProfileMenuOpen(false);
+    void kitHost?.showHistory();
+  }, [kitHost]);
+
   return (
     <div className="app-shell app-shell--chat">
       <div className="chat-shell">
         <header className="tripin-header tripin-header--in-chat">
           <div className="tripin-header-main-row">
-            <div className="tripin-header-spacer" aria-hidden="true" />
+            <div className="tripin-header-left-actions">
+              <button
+                type="button"
+                className="btn-history-icon"
+                aria-label="Open chat history"
+                onClick={onHistoryClick}
+              >
+                🕒
+              </button>
+            </div>
             <div className="tripin-header-brand-center">
               <p className="tripin-wordmark tripin-wordmark--center">TRIPIN</p>
             </div>

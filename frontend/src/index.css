@@ -483,6 +483,8 @@ openai-chatkit {
   left: 50%;
   transform: translateX(-50%);
   text-align: center;
+  pointer-events: none;
+  z-index: 1;
 }
 
 .tripin-wordmark {
@@ -532,6 +534,17 @@ openai-chatkit {
   align-items: center;
   gap: 0.5rem;
   transform: translate(-0.3rem, -0.2rem);
+  position: relative;
+  z-index: 3;
+}
+
+.tripin-header-left-actions {
+  justify-self: start;
+  display: flex;
+  align-items: center;
+  transform: translate(0.3rem, -0.2rem);
+  position: relative;
+  z-index: 3;
 }
 
 .btn-chat-action {
@@ -551,6 +564,23 @@ openai-chatkit {
 
 .profile-menu-wrap {
   position: relative;
+}
+
+.btn-history-icon {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  border: 1px solid var(--tripin-border);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--tripin-text);
+  font-size: 0.88rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.btn-history-icon:hover {
+  border-color: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.14);
 }
 
 .btn-profile-initial {
