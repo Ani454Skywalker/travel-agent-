@@ -107,8 +107,29 @@ function displayFirstName(raw: string | null): string | null {
   return t.charAt(0).toUpperCase() + t.slice(1);
 }
 
+/** Avatar letter: first name → last name → first letter of email local-part (e.g. anastasis@… → A). */
+function profileButtonInitial(
+  firstName: string | null,
+  lastName: string | null,
+  email: string | null,
+): string {
+  const fn = firstName?.trim();
+  if (fn) return fn.charAt(0).toUpperCase();
+  const ln = lastName?.trim();
+  if (ln) return ln.charAt(0).toUpperCase();
+  const em = email?.trim();
+  if (em) {
+    const local = em.split("@")[0]?.trim() ?? "";
+    for (const ch of local) {
+      if (/[a-zA-Z]/.test(ch)) return ch.toUpperCase();
+    }
+    if (local.length > 0) return local.charAt(0).toUpperCase();
+  }
+  return "?";
+}
+
 export default function Chat() {
-  const { token, firstName, logout } = useAuth();
+  const { token, email, firstName, lastName, logout } = useAuth();
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const profileMenuRef = useRef<HTMLDivElement | null>(null);
 
@@ -122,8 +143,6 @@ export default function Chat() {
   }, [firstName]);
 
   const [kitError, setKitError] = useState<string | null>(null);
-  /** Shown above ChatKit while the assistant is generating (hosted widget may still show its own labels). */
-  const [assistantThinking, setAssistantThinking] = useState(false);
 
   /** Latest control for `onReady` (avoids stale closure). */
   const controlRef = useRef<ChatKitControl | null>(null);
@@ -173,16 +192,10 @@ export default function Chat() {
     header: { enabled: false },
     /** Required for `showHistory()`; custom history button lives in `tripin-header`. */
     history: { enabled: true, showDelete: true, showRename: true },
+    threadItemActions: { feedback: false },
     startScreen,
     composer: TRIPIN_CHATKIT_COMPOSER,
-    onResponseStart: () => {
-      setAssistantThinking(true);
-    },
-    onResponseEnd: () => {
-      setAssistantThinking(false);
-    },
     onError: ({ error }) => {
-      setAssistantThinking(false);
       const msg = error?.message ?? String(error);
       setKitError(msg);
       console.error("ChatKit error:", error);
@@ -212,6 +225,7 @@ export default function Chat() {
           theme: TRIPIN_CHATKIT_THEME,
           header: { enabled: false },
           history: { enabled: true, showDelete: true, showRename: true },
+          threadItemActions: { feedback: false },
           composer: TRIPIN_CHATKIT_COMPOSER,
           startScreen: {
             greeting: startGreetingRef.current,
@@ -236,10 +250,10 @@ export default function Chat() {
     return () => kitHost.removeEventListener("chatkit.ready", onReady);
   }, [kitHost]);
 
-  const userInitial = useMemo(() => {
-    const name = displayFirstName(firstName);
-    return (name?.charAt(0) ?? "U").toUpperCase();
-  }, [firstName]);
+  const userInitial = useMemo(
+    () => profileButtonInitial(firstName, lastName, email),
+    [firstName, lastName, email],
+  );
 
   useEffect(() => {
     if (!profileMenuOpen) return;
@@ -373,11 +387,6 @@ export default function Chat() {
 
         {kitError ? <div className="kit-error kit-error--in-chat">{kitError}</div> : null}
         <div className="chat-frame">
-          {assistantThinking ? (
-            <div className="chat-thinking-banner" role="status" aria-live="polite">
-              Exploring...
-            </div>
-          ) : null}
           <ChatKit
             ref={bindKitHost}
             control={control}
