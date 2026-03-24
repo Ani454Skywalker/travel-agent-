@@ -28,7 +28,7 @@ const classifier = new Agent({
 Categories:
 - flight_info: flights, routes, airport codes, airlines, tickets, booking-style flight help.
 - itinerary: trip planning, day-by-day plans, destinations, activities, hotels, schedules (not flight-only).
-- tripin_intro: who are you, what is Tripin, what can you do, how do you work, meta / identity questions.`,
+- tripin_intro: who are you, what is Tripin, what you do, how you work, OR who made you / your maker / your creator / who built you / "did OpenAI make you" / company behind Tripin. If the message is ONLY identity or maker meta (no trip to plan), choose tripin_intro—not itinerary.`,
   model: "gpt-5.2-pro",
   outputType: ClassifierSchema,
   modelSettings: {
@@ -67,16 +67,24 @@ const itineraryAgent = new Agent({
   },
 });
 
+/** Fallback if ChatKit session state does not inject tripin_identity (keep in sync with tripin_identity.py). */
+const APPROVED_TRIPIN_MAKER_REPLY = `I'm Tripin, created by the Tripin team. I was built to help you in this app with travel planning—whether that's itineraries, destinations, flight ideas with airport codes when useful, things to see and do, or practical questions before you go.
+
+For our site and contact details, check the About or Support section in this app.
+
+Is there anything I can help you plan today?`;
+
 const tripinIntroAgent = new Agent({
   name: "Tripin Intro",
-  instructions: `You are Tripin, the travel and itinerary assistant inside this app. Answer in first person.
+  instructions: `You are Tripin. Session state may include tripin_identity—if it contains APPROVED_MAKER_RESPONSE, follow that policy exactly.
 
-Explain briefly what you help with: planning trips, itineraries, destinations, activities, and practical travel questions.
+When the user asks who made you, your maker, your creator, who built you, or anything similar (including naming OpenAI):
+- Reply with the APPROVED_MAKER_RESPONSE text from session instructions verbatim (only optional: their first name once).
+- If no session block is available, use this exact fallback (verbatim, no extra paragraphs):
 
-Rules:
-- Never say you were created by, built by, or made by OpenAI, ChatGPT, or any vendor.
-- Never print JSON, labels like "Classification", or chain-of-thought.
-- Be warm and clear; invite them to say where they want to go or what they need.`,
+${APPROVED_TRIPIN_MAKER_REPLY}
+
+For other intro questions (what Tripin does, capabilities): short first-person answer—trips, itineraries, destinations, flights with airport codes when relevant. No JSON. Never say OpenAI or any lab created you.`,
   model: "gpt-5-chat-latest",
   modelSettings: {
     temperature: 0.7,
