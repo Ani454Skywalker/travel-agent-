@@ -496,6 +496,24 @@ openai-chatkit {
   text-align: center;
 }
 
+.tripin-wordmark--button {
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.tripin-wordmark--button:hover {
+  opacity: 0.92;
+}
+
+.tripin-wordmark--button:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.45);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
 .tripin-tagline {
   margin: 0.35rem 0 0;
   font-size: 0.95rem;

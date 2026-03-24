@@ -261,6 +261,14 @@ export default function Chat() {
     void kitHost?.showHistory();
   }, [kitHost]);
 
+  const onNewConversationClick = useCallback(() => {
+    setProfileMenuOpen(false);
+    const host = kitHost;
+    if (!host) return;
+    void host.hideHistory().catch(() => undefined);
+    void host.setThreadId(null).catch(() => undefined);
+  }, [kitHost]);
+
   return (
     <div className="app-shell app-shell--chat">
       <div className="chat-shell">
@@ -316,7 +324,14 @@ export default function Chat() {
               </div>
             </div>
             <div className="tripin-header-brand-center">
-              <p className="tripin-wordmark tripin-wordmark--center">TRIPIN</p>
+              <button
+                type="button"
+                className="tripin-wordmark tripin-wordmark--center tripin-wordmark--button"
+                aria-label="Start a new conversation"
+                onClick={onNewConversationClick}
+              >
+                TRIPIN
+              </button>
             </div>
             <div className="tripin-header-actions">
               <button
