@@ -167,9 +167,10 @@ export default function Chat() {
       getClientSecret,
     },
     theme: TRIPIN_CHATKIT_THEME,
-    history: {
-      enabled: false,
-    },
+    /** App header shows TRIPIN + buttons; hide ChatKit chrome so history is only our header control. */
+    header: { enabled: false },
+    /** Required for `showHistory()`; custom history button lives in `tripin-header`. */
+    history: { enabled: true, showDelete: false, showRename: true },
     startScreen,
     composer: TRIPIN_CHATKIT_COMPOSER,
     onError: ({ error }) => {
@@ -200,9 +201,8 @@ export default function Chat() {
         kitHost.setOptions({
           ...opts,
           theme: TRIPIN_CHATKIT_THEME,
-          history: {
-            enabled: false,
-          },
+          header: { enabled: false },
+          history: { enabled: true, showDelete: false, showRename: true },
           composer: TRIPIN_CHATKIT_COMPOSER,
           startScreen: {
             greeting: startGreetingRef.current,
@@ -255,6 +255,11 @@ export default function Chat() {
     setProfileMenuOpen(false);
     window.alert(`${label} is coming soon.`);
   }, []);
+
+  const onHistoryClick = useCallback(() => {
+    setProfileMenuOpen(false);
+    void kitHost?.showHistory();
+  }, [kitHost]);
 
   return (
     <div className="app-shell app-shell--chat">
@@ -313,7 +318,32 @@ export default function Chat() {
             <div className="tripin-header-brand-center">
               <p className="tripin-wordmark tripin-wordmark--center">TRIPIN</p>
             </div>
-            <div className="tripin-header-actions" aria-hidden="true" />
+            <div className="tripin-header-actions">
+              <button
+                type="button"
+                className="btn-history-icon"
+                aria-label="Open chat history"
+                onClick={onHistoryClick}
+              >
+                <svg className="btn-history-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
+                  <circle cx="12" cy="12" r="8.25" fill="none" stroke="currentColor" strokeWidth="1.75" />
+                  <path
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.75"
+                    strokeLinecap="round"
+                    d="M12 7.25v5l3 2"
+                  />
+                  <path
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    d="M6.5 5.5a9 9 0 0 1 11 0"
+                  />
+                </svg>
+              </button>
+            </div>
           </div>
         </header>
 
