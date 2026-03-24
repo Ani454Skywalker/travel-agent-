@@ -109,6 +109,8 @@ function displayFirstName(raw: string | null): string | null {
 
 export default function Chat() {
   const { token, firstName, logout } = useAuth();
+  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  const profileMenuRef = useRef<HTMLDivElement | null>(null);
 
   /** ChatKit start screen greeting. */
   const startGreeting = useMemo(() => {
@@ -219,19 +221,103 @@ export default function Chat() {
     return () => kitHost.removeEventListener("chatkit.ready", onReady);
   }, [kitHost]);
 
+  const userInitial = useMemo(() => {
+    const name = displayFirstName(firstName);
+    return (name?.charAt(0) ?? "U").toUpperCase();
+  }, [firstName]);
+
+  useEffect(() => {
+    if (!profileMenuOpen) return;
+    const onPointerDown = (event: MouseEvent) => {
+      if (!profileMenuRef.current) return;
+      if (!profileMenuRef.current.contains(event.target as Node)) {
+        setProfileMenuOpen(false);
+      }
+    };
+    const onEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setProfileMenuOpen(false);
+    };
+    document.addEventListener("mousedown", onPointerDown);
+    document.addEventListener("keydown", onEscape);
+    return () => {
+      document.removeEventListener("mousedown", onPointerDown);
+      document.removeEventListener("keydown", onEscape);
+    };
+  }, [profileMenuOpen]);
+
+  const onHistoryClick = useCallback(() => {
+    setProfileMenuOpen(false);
+    void kitHost?.showHistory();
+  }, [kitHost]);
+
+  const onComingSoonClick = useCallback((label: string) => {
+    setProfileMenuOpen(false);
+    window.alert(`${label} is coming soon.`);
+  }, []);
+
   return (
     <div className="app-shell app-shell--chat">
       <div className="chat-shell">
         <header className="tripin-header tripin-header--in-chat">
-          <div className="tripin-header-row">
-            <div>
-              <p className="tripin-wordmark">TRIPIN</p>
-              <p className="tripin-tagline">Your travel and Itinerary agent</p>
+          <div className="tripin-header-main-row">
+            <div className="tripin-header-spacer" aria-hidden="true" />
+            <div className="tripin-header-brand-center">
+              <p className="tripin-wordmark tripin-wordmark--center">TRIPIN</p>
             </div>
-            <button type="button" className="btn-logout-minimal" onClick={() => logout()}>
-              Log out
-            </button>
+            <div className="tripin-header-actions">
+              <button type="button" className="btn-chat-action" onClick={onHistoryClick}>
+                History
+              </button>
+              <div className="profile-menu-wrap" ref={profileMenuRef}>
+                <button
+                  type="button"
+                  className="btn-profile-initial"
+                  aria-haspopup="menu"
+                  aria-expanded={profileMenuOpen}
+                  onClick={() => setProfileMenuOpen((prev) => !prev)}
+                >
+                  {userInitial}
+                </button>
+                {profileMenuOpen ? (
+                  <div className="profile-menu-dropdown" role="menu" aria-label="Profile menu">
+                    <button
+                      type="button"
+                      className="profile-menu-item"
+                      role="menuitem"
+                      onClick={() => onComingSoonClick("Setup profile")}
+                    >
+                      Setup profile
+                    </button>
+                    <button
+                      type="button"
+                      className="profile-menu-item"
+                      role="menuitem"
+                      onClick={() => onComingSoonClick("Settings")}
+                    >
+                      Settings
+                    </button>
+                    <button
+                      type="button"
+                      className="profile-menu-item"
+                      role="menuitem"
+                      onClick={() => onComingSoonClick("About us")}
+                    >
+                      About us
+                    </button>
+                    <button
+                      type="button"
+                      className="profile-menu-item profile-menu-item--danger"
+                      role="menuitem"
+                      onClick={() => logout()}
+                    >
+                      Log out
+                    </button>
+                  </div>
+                ) : null}
+              </div>
+            </div>
           </div>
+          <p className="tripin-tagline tripin-tagline--center">Your travel and Itinerary agent</p>
         </header>
 
         {kitError ? <div className="kit-error kit-error--in-chat">{kitError}</div> : null}
