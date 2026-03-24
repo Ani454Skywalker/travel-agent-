@@ -55,4 +55,4 @@ def login(body: UserLogin, db: Session = Depends(get_db)):
 
 @router.get("/me", response_model=UserPublic)
 def me(user: User = Depends(get_current_user)):
-    return UserPublic(id=user.id, email=user.email)
+    return UserPublic.model_validate(user)

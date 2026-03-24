@@ -107,29 +107,17 @@ function displayFirstName(raw: string | null): string | null {
   return t.charAt(0).toUpperCase() + t.slice(1);
 }
 
-/** Avatar letter: first name → last name → first letter of email local-part (e.g. anastasis@… → A). */
-function profileButtonInitial(
-  firstName: string | null,
-  lastName: string | null,
-  email: string | null,
-): string {
+/** Avatar letter from the account’s registered name (signup): first name, else last name. */
+function profileButtonInitial(firstName: string | null, lastName: string | null): string {
   const fn = firstName?.trim();
   if (fn) return fn.charAt(0).toUpperCase();
   const ln = lastName?.trim();
   if (ln) return ln.charAt(0).toUpperCase();
-  const em = email?.trim();
-  if (em) {
-    const local = em.split("@")[0]?.trim() ?? "";
-    for (const ch of local) {
-      if (/[a-zA-Z]/.test(ch)) return ch.toUpperCase();
-    }
-    if (local.length > 0) return local.charAt(0).toUpperCase();
-  }
   return "?";
 }
 
 export default function Chat() {
-  const { token, email, firstName, lastName, logout } = useAuth();
+  const { token, firstName, lastName, logout } = useAuth();
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const profileMenuRef = useRef<HTMLDivElement | null>(null);
 
@@ -251,8 +239,8 @@ export default function Chat() {
   }, [kitHost]);
 
   const userInitial = useMemo(
-    () => profileButtonInitial(firstName, lastName, email),
-    [firstName, lastName, email],
+    () => profileButtonInitial(firstName, lastName),
+    [firstName, lastName],
   );
 
   useEffect(() => {
