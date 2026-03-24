@@ -172,7 +172,7 @@ export default function Chat() {
     /** App header shows TRIPIN + buttons; hide ChatKit chrome so history is only our header control. */
     header: { enabled: false },
     /** Required for `showHistory()`; custom history button lives in `tripin-header`. */
-    history: { enabled: true, showDelete: false, showRename: true },
+    history: { enabled: true, showDelete: true, showRename: true },
     startScreen,
     composer: TRIPIN_CHATKIT_COMPOSER,
     onResponseStart: () => {
@@ -211,7 +211,7 @@ export default function Chat() {
           ...opts,
           theme: TRIPIN_CHATKIT_THEME,
           header: { enabled: false },
-          history: { enabled: true, showDelete: false, showRename: true },
+          history: { enabled: true, showDelete: true, showRename: true },
           composer: TRIPIN_CHATKIT_COMPOSER,
           startScreen: {
             greeting: startGreetingRef.current,
@@ -375,12 +375,7 @@ export default function Chat() {
         <div className="chat-frame">
           {assistantThinking ? (
             <div className="chat-thinking-banner" role="status" aria-live="polite">
-              <span className="chat-thinking-label">Exploring your trip</span>
-              <span className="chat-thinking-dots" aria-hidden="true">
-                <span>.</span>
-                <span>.</span>
-                <span>.</span>
-              </span>
+              Exploring...
             </div>
           ) : null}
           <ChatKit
