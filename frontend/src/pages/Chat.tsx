@@ -375,6 +375,12 @@ export default function Chat() {
 
         {kitError ? <div className="kit-error kit-error--in-chat">{kitError}</div> : null}
         <div className="chat-frame">
+          {/*
+            Hosted ChatKit runs inside a cross-origin iframe; we cannot strip assistant text
+            (e.g. “Thought for a moment”, {"Classification":...}) from JS here. Remove those
+            in Agent Builder: disable reasoning summaries on the user-facing Agent; route
+            classifier JSON to state/branches only, not to the visible reply. See tripin_identity.py.
+          */}
           <ChatKit
             ref={bindKitHost}
             control={control}
