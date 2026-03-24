@@ -167,6 +167,9 @@ export default function Chat() {
       getClientSecret,
     },
     theme: TRIPIN_CHATKIT_THEME,
+    history: {
+      enabled: false,
+    },
     startScreen,
     composer: TRIPIN_CHATKIT_COMPOSER,
     onError: ({ error }) => {
@@ -197,6 +200,9 @@ export default function Chat() {
         kitHost.setOptions({
           ...opts,
           theme: TRIPIN_CHATKIT_THEME,
+          history: {
+            enabled: false,
+          },
           composer: TRIPIN_CHATKIT_COMPOSER,
           startScreen: {
             greeting: startGreetingRef.current,
