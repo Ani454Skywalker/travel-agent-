@@ -122,6 +122,8 @@ export default function Chat() {
   }, [firstName]);
 
   const [kitError, setKitError] = useState<string | null>(null);
+  /** Shown above ChatKit while the assistant is generating (hosted widget may still show its own labels). */
+  const [assistantThinking, setAssistantThinking] = useState(false);
 
   /** Latest control for `onReady` (avoids stale closure). */
   const controlRef = useRef<ChatKitControl | null>(null);
@@ -173,7 +175,14 @@ export default function Chat() {
     history: { enabled: true, showDelete: false, showRename: true },
     startScreen,
     composer: TRIPIN_CHATKIT_COMPOSER,
+    onResponseStart: () => {
+      setAssistantThinking(true);
+    },
+    onResponseEnd: () => {
+      setAssistantThinking(false);
+    },
     onError: ({ error }) => {
+      setAssistantThinking(false);
       const msg = error?.message ?? String(error);
       setKitError(msg);
       console.error("ChatKit error:", error);
@@ -364,6 +373,16 @@ export default function Chat() {
 
         {kitError ? <div className="kit-error kit-error--in-chat">{kitError}</div> : null}
         <div className="chat-frame">
+          {assistantThinking ? (
+            <div className="chat-thinking-banner" role="status" aria-live="polite">
+              <span className="chat-thinking-label">Exploring your trip</span>
+              <span className="chat-thinking-dots" aria-hidden="true">
+                <span>.</span>
+                <span>.</span>
+                <span>.</span>
+              </span>
+            </div>
+          ) : null}
           <ChatKit
             ref={bindKitHost}
             control={control}
