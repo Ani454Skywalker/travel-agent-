@@ -43,7 +43,7 @@ export default function Login() {
         <p className="auth-brand">TRIPIN</p>
         <h1>Log in</h1>
         <p className="auth-sub">
-          Your itinerary and travel agent — one account for your trips.
+          Your Itinerary and Travel Agent, one account for your trips.
         </p>
         {justRegistered ? (
           <p className="auth-banner auth-banner--ok" role="status">

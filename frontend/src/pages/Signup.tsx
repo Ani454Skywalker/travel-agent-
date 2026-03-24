@@ -62,7 +62,7 @@ export default function Signup() {
         <p className="auth-brand">TRIPIN</p>
         <h1>Create account</h1>
         <p className="auth-sub">
-          Sign up with your name and birthday — we’ll greet you personally in the app.
+          Sign up with your name and birthday. We’ll greet you personally in the app.
         </p>
         <form onSubmit={onSubmit}>
           <div className="auth-row">

@@ -27,19 +27,19 @@ def send_signup_confirmation(to_email: str, first_name: str = "") -> None:
     from_addr = os.environ.get("EMAIL_FROM", user or "noreply@example.com").strip()
 
     hi = f"Hi {first_name}," if first_name.strip() else "Hi,"
-    subject = "Welcome to TRIPIN — you’re signed up"
+    subject = "Welcome to TRIPIN. You’re signed up"
     text = (
         f"{hi}\n\n"
         f"Thanks for creating a TRIPIN account ({to_email}).\n\n"
         f"Log in on the app with your email and password.\n\n"
-        f"— TRIPIN (your travel & itinerary agent)\n"
+        f"TRIPIN (your travel & itinerary agent)\n"
     )
     html = (
         f"<p>{hi}</p>"
         f"<p>Thanks for creating a <strong>TRIPIN</strong> account "
         f"(<strong>{to_email}</strong>).</p>"
         f"<p><strong>Log in</strong> on the app with your email and password.</p>"
-        f"<p>— TRIPIN (your travel &amp; itinerary agent)</p>"
+        f"<p>TRIPIN (your travel &amp; itinerary agent)</p>"
     )
 
     msg = EmailMessage()
