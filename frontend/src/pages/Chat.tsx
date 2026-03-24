@@ -250,30 +250,12 @@ export default function Chat() {
     window.alert(`${label} is coming soon.`);
   }, []);
 
-  const onHistoryClick = useCallback(() => {
-    setProfileMenuOpen(false);
-    void kitHost?.showHistory();
-  }, [kitHost]);
-
   return (
     <div className="app-shell app-shell--chat">
       <div className="chat-shell">
         <header className="tripin-header tripin-header--in-chat">
           <div className="tripin-header-main-row">
             <div className="tripin-header-left-actions">
-              <button
-                type="button"
-                className="btn-history-icon"
-                aria-label="Open chat history"
-                onClick={onHistoryClick}
-              >
-                🕒
-              </button>
-            </div>
-            <div className="tripin-header-brand-center">
-              <p className="tripin-wordmark tripin-wordmark--center">TRIPIN</p>
-            </div>
-            <div className="tripin-header-actions">
               <div className="profile-menu-wrap" ref={profileMenuRef}>
                 <button
                   type="button"
@@ -285,7 +267,7 @@ export default function Chat() {
                   {userInitial}
                 </button>
                 {profileMenuOpen ? (
-                  <div className="profile-menu-dropdown" role="menu" aria-label="Profile menu">
+                  <div className="profile-menu-dropdown profile-menu-dropdown--left" role="menu" aria-label="Profile menu">
                     <button
                       type="button"
                       className="profile-menu-item"
@@ -322,6 +304,10 @@ export default function Chat() {
                 ) : null}
               </div>
             </div>
+            <div className="tripin-header-brand-center">
+              <p className="tripin-wordmark tripin-wordmark--center">TRIPIN</p>
+            </div>
+            <div className="tripin-header-actions" aria-hidden="true" />
           </div>
         </header>
 

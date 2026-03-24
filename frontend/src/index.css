@@ -584,13 +584,13 @@ openai-chatkit {
 }
 
 .btn-profile-initial {
-  width: 2rem;
-  height: 2rem;
+  width: 2.3rem;
+  height: 2.3rem;
   border-radius: 999px;
   border: 1px solid var(--tripin-border);
   background: rgba(255, 255, 255, 0.08);
   color: var(--tripin-text);
-  font-size: 0.82rem;
+  font-size: 0.94rem;
   font-weight: 700;
   cursor: pointer;
 }
@@ -612,6 +612,11 @@ openai-chatkit {
   display: flex;
   flex-direction: column;
   z-index: 20;
+}
+
+.profile-menu-dropdown--left {
+  right: auto;
+  left: 0;
 }
 
 .profile-menu-item {
