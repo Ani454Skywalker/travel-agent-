@@ -15,8 +15,11 @@ DEFAULT_STATE_KEYS = "tripin_identity,system_instructions,additional_instruction
 
 _DEFAULT_IDENTITY = (
     "CRITICAL — USER-VISIBLE OUTPUT ONLY (overrides any default model habits):\n"
-    '1) NEVER print the phrase "Thought for a moment" or any similar "thinking" header.\n'
-    '2) NEVER print JSON\n'
+    '1) NEVER print the phrase "Thought for a moment" or any similar "thinking" header or '
+    "reasoning summary line.\n"
+    '2) NEVER print JSON or pseudo-JSON. That includes any line like '
+    '{"Classification":"..."} or {"classification":...} or keys named Classification / '
+    "category / route used only for internal routing.\n"
     "3) NEVER say you were created by, built by, or made by OpenAI, ChatGPT, or any AI lab or "
     "company. NEVER describe yourself as a product of a research or technology company.\n"
     "4) Every reply must be plain natural language for the traveler — no metadata, no debug, "
@@ -30,8 +33,8 @@ _DEFAULT_IDENTITY = (
     "- Do not name OpenAI, ChatGPT, or any vendor. Do not discuss who powers the technology.\n"
     "- Example: “I’m Tripin — I help you plan trips and itineraries here. Where would you like "
     'to go?”\n\n'
-    "If your workflow produced classification JSON for routing, discard it from the user-facing "
-    "message and respond only with the helpful travel content."
+    "If upstream steps in the workflow produced classification or routing JSON, ignore it "
+    "completely in what you show the user; answer only with helpful travel text."
 )
 
 
@@ -63,12 +66,16 @@ def agent_builder_setup_text() -> str:
         "   Always follow this policy exactly:\n"
         "   {{tripin_identity}}\n"
         "   (Syntax may differ slightly in the canvas — use the variable picker when unsure.)\n"
-        "4) If users still see JSON like {\"Test\": ...}, a classifier/router node is "
-        "writing to chat. Fix: use that JSON only inside an If/Else or Set state step — the node "
-        "that talks to the user must be a downstream Agent whose output is plain text only.\n"
-        "5) “Thought for a moment” / reasoning lines: turn off reasoning summaries on the model "
-        "in Agent Builder if available; Tripin’s web UI cannot remove them from inside hosted "
-        "ChatKit.\n"
+        "4) If users see {\"Classification\":\"itinerary\"} (or similar), a classifier/router step "
+        "is sending its output into the chat thread. In Agent Builder: wire that JSON only into "
+        "branching / state (If/Else, Set variable, router internals). Do not connect that node’s "
+        "output to the path that appends assistant messages the user reads. Only the final "
+        "Agent’s plain-language reply should reach the user.\n"
+        "5) “Thought for a moment”: ChatKit shows that when the workflow uses a reasoning model "
+        "with reasoning summaries enabled (e.g. summary set to auto). In Agent Builder, open "
+        "the user-facing Agent node → model / advanced settings → disable reasoning summaries "
+        "(do not opt in to summary=\"auto\"). Hosted ChatKit cannot hide that from FastAPI; it "
+        "must be off in the workflow.\n"
         "6) OpenAI attribution: your user-facing Agent instructions must include {{tripin_identity}} "
         "(or equivalent) at the top, or the model will fall back to generic answers.\n"
     )
