@@ -141,6 +141,7 @@ body {
   border-radius: 0;
   border: none;
   box-shadow: none;
+  margin-top: -0.45rem;
   padding-bottom: env(safe-area-inset-bottom);
 }
 
@@ -170,6 +171,7 @@ body {
   }
 
   .app-shell--chat .chat-frame {
+    margin-top: -0.3rem;
     padding-bottom: 0;
   }
 }
