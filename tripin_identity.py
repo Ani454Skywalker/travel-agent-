@@ -63,7 +63,7 @@ def agent_builder_setup_text() -> str:
         "   Always follow this policy exactly:\n"
         "   {{tripin_identity}}\n"
         "   (Syntax may differ slightly in the canvas — use the variable picker when unsure.)\n"
-        "4) If users still see JSON like {\"Classification\": ...}, a classifier/router node is "
+        "4) If users still see JSON like {\"Test\": ...}, a classifier/router node is "
         "writing to chat. Fix: use that JSON only inside an If/Else or Set state step — the node "
         "that talks to the user must be a downstream Agent whose output is plain text only.\n"
         "5) “Thought for a moment” / reasoning lines: turn off reasoning summaries on the model "
