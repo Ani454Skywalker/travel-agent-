@@ -245,11 +245,6 @@ export default function Chat() {
     };
   }, [profileMenuOpen]);
 
-  const onHistoryClick = useCallback(() => {
-    setProfileMenuOpen(false);
-    void kitHost?.showHistory();
-  }, [kitHost]);
-
   const onComingSoonClick = useCallback((label: string) => {
     setProfileMenuOpen(false);
     window.alert(`${label} is coming soon.`);
@@ -265,9 +260,6 @@ export default function Chat() {
               <p className="tripin-wordmark tripin-wordmark--center">TRIPIN</p>
             </div>
             <div className="tripin-header-actions">
-              <button type="button" className="btn-chat-action" onClick={onHistoryClick}>
-                History
-              </button>
               <div className="profile-menu-wrap" ref={profileMenuRef}>
                 <button
                   type="button"
@@ -317,7 +309,6 @@ export default function Chat() {
               </div>
             </div>
           </div>
-          <p className="tripin-tagline tripin-tagline--center">Your travel and Itinerary agent</p>
         </header>
 
         {kitError ? <div className="kit-error kit-error--in-chat">{kitError}</div> : null}
