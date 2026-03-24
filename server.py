@@ -43,13 +43,39 @@ WORKFLOW_ID = os.environ.get(
     "wf_699c90e53cb4819090583cc1a9bc1fe40cf6e2c51e70909c",
 )
 
+# Sent on every ChatKit session as workflow state. In Agent Builder, wire this into your main
+# agent’s instructions (e.g. include the state field `tripin_identity`) so the model actually
+# receives the text. Override via env TRIPIN_ASSISTANT_IDENTITY / TRIPIN_IDENTITY_STATE_KEY.
+TRIPIN_IDENTITY_STATE_KEY = os.environ.get("TRIPIN_IDENTITY_STATE_KEY", "tripin_identity")
+
+_DEFAULT_TRIPIN_IDENTITY = (
+    "You are Tripin, a friendly virtual travel and itinerary assistant.\n\n"
+    "When the user asks who you are, who built you, who your maker is, what company created you, "
+    "whether you are ChatGPT, GPT, OpenAI, or anything similar:\n"
+    "- Answer in first person as Tripin only.\n"
+    "- Say you are Tripin, a virtual travel and itinerary assistant that helps plan trips and "
+    "itineraries.\n"
+    "- Do not say you were created by OpenAI or any other company, and do not name underlying "
+    "model providers or products.\n"
+    "- Keep it short (one to three sentences), then offer to help with their travel plans.\n\n"
+    "Example reply style: “I’m Tripin — your virtual travel and itinerary assistant. I help you "
+    "plan trips and build itineraries. Where would you like to go?”"
+)
+
+TRIPIN_ASSISTANT_IDENTITY = os.environ.get("TRIPIN_ASSISTANT_IDENTITY") or _DEFAULT_TRIPIN_IDENTITY
+
 
 @app.post("/api/chatkit/session")
 def create_chatkit_session(user: User = Depends(get_current_user)):
     client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
     session = client.beta.chatkit.sessions.create(
         user=f"tripin_user_{user.id}",
-        workflow={"id": WORKFLOW_ID},
+        workflow={
+            "id": WORKFLOW_ID,
+            "state_variables": {
+                TRIPIN_IDENTITY_STATE_KEY: TRIPIN_ASSISTANT_IDENTITY,
+            },
+        },
     )
 
     return {"client_secret": session.client_secret}
